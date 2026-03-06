@@ -1,0 +1,225 @@
+/* 卡通风格 · 适合小学生 */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Comic Sans MS", "Microsoft YaHei", "PingFang SC", sans-serif;
+  background: linear-gradient(160deg, #a8e6cf 0%, #ffd3b5 50%, #ffaaa5 100%);
+  color: #333;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.page {
+  display: grid;
+  grid-template-columns: 1fr 420px;
+  gap: 24px;
+  max-width: 1200px;
+  width: 100%;
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .page {
+    grid-template-columns: 1fr;
+  }
+}
+
+.left-panel {
+  background: #fff;
+  border-radius: 24px;
+  padding: 24px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), 0 0 0 4px rgba(255, 255, 255, 0.8);
+  border: 4px solid #ff8b94;
+}
+
+.left-panel h1 {
+  margin: 0 0 4px;
+  font-size: 28px;
+  font-weight: 700;
+  color: #ff6b6b;
+  text-align: center;
+  text-shadow: 2px 2px 0 rgba(255, 255, 255, 0.8);
+}
+
+.hint {
+  margin: 0 0 16px;
+  font-size: 16px;
+  color: #888;
+  text-align: center;
+}
+
+.canvas-wrap {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+#canvas {
+  width: 100%;
+  max-width: 400px;
+  height: auto;
+  aspect-ratio: 1;
+  max-height: min(70vh, 400px);
+  border-radius: 16px;
+  border: 4px solid #ffcc80;
+  background: #fff;
+  touch-action: none;
+  cursor: crosshair;
+  box-shadow: inset 0 0 0 2px #fff, 0 4px 12px rgba(255, 155, 113, 0.3);
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  align-items: center;
+}
+
+.btn {
+  border: none;
+  border-radius: 999px;
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.btn:active {
+  transform: scale(0.96);
+}
+
+.btn-primary {
+  background: linear-gradient(180deg, #ff9a8b 0%, #ff6b6b 100%);
+  color: #fff;
+  box-shadow: 0 4px 0 #e85555, 0 6px 12px rgba(255, 107, 107, 0.4);
+}
+
+.btn-primary:hover {
+  box-shadow: 0 5px 0 #e85555, 0 8px 16px rgba(255, 107, 107, 0.45);
+}
+
+.btn-secondary {
+  background: linear-gradient(180deg, #b5e8e0 0%, #7dd3c4 100%);
+  color: #2d6a5e;
+  box-shadow: 0 4px 0 #5eb8a8, 0 6px 12px rgba(125, 211, 196, 0.35);
+}
+
+.btn-secondary:hover {
+  box-shadow: 0 5px 0 #5eb8a8, 0 8px 16px rgba(125, 211, 196, 0.4);
+}
+
+.btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.status {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #999;
+  text-align: center;
+}
+
+.right-panel {
+  background: #fff;
+  border-radius: 24px;
+  padding: 24px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), 0 0 0 4px rgba(255, 255, 255, 0.8);
+  border: 4px solid #a8e6cf;
+  min-height: 320px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.mascot-wrap {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.speech-bubble {
+  background: linear-gradient(180deg, #fff9e6 0%, #fff3cc 100%);
+  border: 3px solid #ffcc80;
+  border-radius: 20px;
+  padding: 14px 18px;
+  margin-bottom: 12px;
+  max-width: 100%;
+  min-height: 52px;
+  box-shadow: 0 4px 12px rgba(255, 204, 128, 0.4);
+  position: relative;
+}
+
+.speech-bubble::after {
+  content: "";
+  position: absolute;
+  bottom: -14px;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 8px solid transparent;
+  border-top-color: #ffcc80;
+}
+
+.speech-bubble #speechText {
+  font-size: 16px;
+  line-height: 1.4;
+  color: #333;
+  display: block;
+}
+
+.speech-bubble.saying-result #speechText {
+  font-size: 22px;
+  font-weight: 700;
+  color: #ff6b6b;
+}
+
+.mascot-img {
+  height: min(70vh, 400px);
+  width: auto;
+  max-width: 100%;
+  display: block;
+  object-fit: contain;
+}
+
+.mascot-name {
+  margin-top: 8px;
+  font-size: 18px;
+  font-weight: 700;
+  color: #ff6b6b;
+  text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.mascot-img[data-fallback] {
+  width: min(70vh, 400px);
+  height: min(70vh, 400px);
+  background: linear-gradient(180deg, #ffd3b5 0%, #ffaaa5 100%);
+  border-radius: 50%;
+  object-fit: none;
+}
+
+.main-result,
+.main-conf,
+.bar-wrap,
+.result-list,
+.result-empty {
+  font-size: 14px;
+}
+
+.list-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 4px 0;
+}
