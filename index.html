@@ -12,7 +12,7 @@
       <h1>猜画画</h1>
       <p class="hint">画一个东西，让 AI 猜～</p>
       <div class="canvas-wrap">
-        <canvas id="canvas" width="400" height="400"></canvas>
+        <canvas id="canvas" width="500" height="500"></canvas>
       </div>
       <div class="controls">
         <button id="clearBtn" class="btn btn-secondary">擦掉重画</button>
@@ -26,7 +26,12 @@
         <div class="speech-bubble" id="speechBubble">
           <span id="speechText">画个东西，我来猜～</span>
         </div>
-        <img src="images/mascot.png" alt="蜗壳小助手" class="mascot-img" id="mascotImg" />
+        <div class="mascot-video-wrap">
+          <video id="mascotVideoA" class="mascot-video front" muted playsinline loop
+            poster="images/mascot.png"></video>
+          <video id="mascotVideoB" class="mascot-video back" muted playsinline loop
+            poster="images/mascot.png"></video>
+        </div>
         <div class="mascot-name">蜗壳小助手</div>
       </div>
       <div id="mainResult" class="main-result" aria-hidden="true"></div>
