@@ -180,10 +180,10 @@
     'AI 会一直进步，以后说不定你随便涂几笔，它就能猜出你心里想画啥。'
   ];
   var tipIndex = 0;
-  var tipTimer = null;
   var resultTimer = null;
-  var TIP_INTERVAL = 9000;
   var RESULT_SHOW_MS = 6000;
+  var isShowingResultInBubble = false;
+  var lastWaveTime = {};
 
   function setSpeech(text, isResult) {
     if (!speechText) return;
@@ -195,29 +195,36 @@
   }
 
   function startTipRotation() {
-    if (tipTimer) clearInterval(tipTimer);
-    tipTimer = setInterval(function () {
-      tipIndex = (tipIndex + 1) % aiTips.length;
-      setSpeech(aiTips[tipIndex], false);
-    }, TIP_INTERVAL);
+    isShowingResultInBubble = false;
   }
 
   function stopTipRotation() {
-    if (tipTimer) {
-      clearInterval(tipTimer);
-      tipTimer = null;
+    isShowingResultInBubble = true;
+  }
+
+  function onWaveTimeUpdate() {
+    var v = this;
+    if (!v || !v.classList.contains('front')) return;
+    var src = (v.src || '').split('?')[0];
+    if (src.indexOf('wavehanding') === -1) return;
+    if (isShowingResultInBubble) return;
+    var t = v.currentTime;
+    var last = lastWaveTime[v.id] || 0;
+    if (t < last - 0.3) {
+      tipIndex = (tipIndex + 1) % aiTips.length;
+      setSpeech(aiTips[tipIndex], false);
     }
+    lastWaveTime[v.id] = t;
   }
 
   function showResultInBubble(label) {
-    stopTipRotation();
+    isShowingResultInBubble = true;
     setSpeech('我猜是：' + (label || '？') + '～', true);
     if (resultTimer) clearTimeout(resultTimer);
     resultTimer = setTimeout(function () {
       resultTimer = null;
-      tipIndex = (tipIndex + 1) % aiTips.length;
       setSpeech(aiTips[tipIndex], false);
-      startTipRotation();
+      isShowingResultInBubble = false;
     }, RESULT_SHOW_MS);
   }
 
@@ -281,6 +288,15 @@
     showWavehanding();
   }
 
+  function scheduleFail(msg) {
+    var elapsed = Date.now() - guessStartTime;
+    if (elapsed >= ANSWER_DELAY_MS) {
+      fail(msg);
+    } else {
+      setTimeout(function () { fail(msg); }, ANSWER_DELAY_MS - elapsed);
+    }
+  }
+
   clearBtn.addEventListener('click', function () {
     initCanvas();
     mainResult.textContent = '？';
@@ -298,7 +314,7 @@
     guessBtn.disabled = true;
     guessBtn.textContent = '猜呢...';
     statusText.textContent = 'AI 在想呢...';
-    stopTipRotation();
+    isShowingResultInBubble = true;
     setSpeech('让我想想', false);
     guessStartTime = Date.now();
 
@@ -328,13 +344,13 @@
           return;
         }
         if (data.error) {
-          fail(data.error.message || data.error);
+          scheduleFail(data.error.message || data.error);
           return;
         }
-        fail('接口返回格式有误');
+        scheduleFail('接口返回格式有误');
       })
       .catch(function (err) {
-        fail('网络错误，请确认后端已启动且地址正确');
+        scheduleFail('网络错误，请确认后端已启动且地址正确');
         console.error(err);
       });
   });
@@ -343,7 +359,7 @@
   guessBtn.disabled = false;
 
   setSpeech(aiTips[0], false);
-  startTipRotation();
+  isShowingResultInBubble = false;
 
   if (videoA) {
     videoA.src = VIDEO.wavehanding;
@@ -357,5 +373,7 @@
     currentFront = 0;
     swapFrontBack();
     videoA.play().catch(function () {});
+    videoA.addEventListener('timeupdate', onWaveTimeUpdate);
+    if (videoB) videoB.addEventListener('timeupdate', onWaveTimeUpdate);
   }
 })();
