@@ -1,7 +1,4 @@
-/**
- * 猜画画 - 前端配置
- * 默认请求同源下的 /api/guess（由后端 server.py 提供）
- */
+/** 猜画画前端配置：识别接口地址，默认同源 /api/guess */
 window.APP_CONFIG = {
   apiUrl: '/api/guess'
 };

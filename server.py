@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
-猜画画 - 后端服务
-使用国内智谱 AI 视觉接口识别简笔画，展厅无法访问 Google 时可用本服务。
-"""
+# 猜画画后端：代理智谱视觉 API 识别简笔画，隐藏 API Key。
 import os
 import re
 import base64
